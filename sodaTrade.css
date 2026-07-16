@@ -45,16 +45,47 @@
     gap: 2rem;
 }
 
-.pictureMotion img {
-    width: 12rem;
-    height: 12rem;
-    object-fit: contain;
+.productCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     flex-shrink: 0;
+}
+
+.productCard img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover; /* or contain, per the earlier gap discussion */
+}
+
+.productCard h3 {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.productCard p,
+.productCard h3 {
+    margin: 10px;
+    padding: 0;
 }
 
 .aboutUs1 {
     background-color: rgb(7, 218, 147);
     margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+    margin: 1rem;
+}
+
+.aboutUs11 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .contactUs1 {
