@@ -63,9 +63,35 @@
     align-items: center;
 }
 
+.material-symbols-outlined {
+    cursor: pointer;
+}
+
 a {
     text-decoration: none;
     color: black;
+}
+
+.navigation1 a {
+    position: relative;
+    text-decoration: none;
+    color: black;
+}
+
+.navigation1 a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -3px;
+    width: 0;
+    height: 2px;
+    background: black;
+    transition: all 0.3s ease;
+}
+
+.navigation1 a:hover::after {
+    left: 0;
+    width: 100%;
 }
 
 header {
