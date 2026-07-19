@@ -71,5 +71,3 @@ const cardsHTML = products
     
 
 container.innerHTML = cardsHTML;
-
-
