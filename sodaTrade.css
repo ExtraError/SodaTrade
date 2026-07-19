@@ -63,8 +63,10 @@
     align-items: center;
 }
 
-.material-symbols-outlined {
+.cart1 img {
     cursor: pointer;
+    width: 30px;
+    height: 30px;
 }
 
 a {
@@ -185,6 +187,8 @@ header {
     justify-content: center;
     gap: 5rem;
     margin: 1rem;
+
+    border-bottom: 2px solid black;
 }
 
 .aboutUs11 {
@@ -199,6 +203,10 @@ header {
     display: block;
     height: auto;
     border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
 }
 
 
@@ -360,13 +368,82 @@ main {
     border-bottom: 2px solid black;
 }
 
+.frontLine1 {
+    border-bottom: 2px solid black;
+}
+
 /* FRONT FOOTER */
 
 .frontFooter1 {
-    background-color: lightskyblue;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-content: center;
 }
 
+.addressFooter1 {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+}
+
+.addressFooter2 {
+    display: grid;
+    align-items: center;
+    margin: 2rem;
+}
+
+.addressFooter2 input {
+    border: none;
+    border-bottom: 1px solid #000; /* Underline */
+    outline: none;
+    background: transparent;
+    padding: 5px 0;
+    width: 20rem;
+    height: 2rem;
+}
+
+.addressFooter2 input::placeholder {
+    color: #888;
+    opacity: 1;
+}
+
+.botonFooter {
+  display: grid;
+}
+
+.botonFooter button {
+  height: 3rem;
+  width: 6rem;
+
+  font-size: 16px;
+  border-radius: 15px;
+  border: 1px solid gray;
+  background-color: #115bfa;
+  color: white;
+  padding: 12px;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+
 /* FOR FONTS */
+
+.addressFooter1 p {
+    font-family: "Google Sans Flex", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0,
+    "wdth" 100,
+    "GRAD" 0,
+    "ROND" 0;
+
+    font-size: 1.2rem;
+}
 
 main h1 {
   font-family: "Google Sans Flex", sans-serif;
@@ -396,6 +473,34 @@ main h2 {
     font-size: 2rem;
 }
 
+.productCard h3 {
+    font-family: "Google Sans Flex", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0,
+    "wdth" 100,
+    "GRAD" 0,
+    "ROND" 0;
+
+    font-size: 1.4rem;
+}
+
+.productCard p {
+    font-family: "Google Sans Flex", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0,
+    "wdth" 100,
+    "GRAD" 0,
+    "ROND" 0;
+
+    font-size: 1.2rem;
+}
+
 main p {
   font-family: "Google Sans", sans-serif;
   font-optical-sizing: auto;
@@ -405,4 +510,18 @@ main p {
     "GRAD" 0;
 
     font-size: 1rem;
+}
+
+.spanFooter {
+    font-family: "Google Sans Flex", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0,
+    "wdth" 100,
+    "GRAD" 0,
+    "ROND" 0;
+
+    font-size: 1.5rem;
 }
