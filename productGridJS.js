@@ -1,73 +1,37 @@
-
+const API_URL = 'http://localhost:3000';
 const container = document.querySelector('.productCards');
 
-const products = [
-    { 
-        id: "princessBea",
-        name: "Princess Bea", 
-        image: "princessBea.jpg",
-        price: "2,280" 
-    },
-    {   
-        id: "royalSwan",
-        name: "Royal Swan", 
-        image: "royalSwan.jpg",
-        price: "1,950" 
-    },
-    { 
-        id: "tulips",
-        name: "Tulips", 
-        image: "tulips.jpg",
-        price: "1,980" 
-    },
-    { 
-        id: "sweetRice",
-        name: "Sweet Rice", 
-        image: "sweetRice.jpg",
-        price: "1,100" 
-    },
-    { 
-        id: "kuyaRice",
-        name: "Kuya Rice", 
-        image: "kuyaRice.jpg",
-        price: "1,980" 
-    },
-    { 
-        id: "dragonLady",
-        name: "Dragon Lady", 
-        image: "dragonLady.jpg",
-        price: "1,030" 
-    },
-    { 
-        id: "kingOfZion",
-        name: "King of Zion", 
-        image: "KingOfZion.jpg",
-        price: "2,100" 
-    },
-    { 
-        id: "deliciousRice",
-        name: "Delicious Rice", 
-        image: "deliciousRice.jpg",
-        price: "1,030" 
-    },
-];
+async function renderCards() {
+    const res = await fetch(`${API_URL}/api/products`);
+    const products = await res.json();
 
-const cardsHTML = products
-    .map(
-        (product) => `
-        <div class="productCard">
-            <img src="${product.image}" alt="${product.name}">
-            <h3>${product.name}</h3>
-            <p>₱ <span>${product.price}</span></p>
+    container.innerHTML = products
+        .map(product => `
+            <a href="productDetail.html?id=${product.id}" class="productCard">
+                <img src="${API_URL}${product.image}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p>₱ <span>${product.price}</span></p>
+                <div class="addToCartBtn">
+                    <button type="button" data-id="${product.id}">Add to Cart</button>
+                </div>
+            </a>
+        `)
+        .join('');
+}
 
-            <div class="addToCartBtn">
-                <button>Add to Cart</button>
-            </div>
-        </div>
-    `
-    )
-    .join("");
+renderCards();
 
-    
+setInterval(renderCards, 5000); // then re-run every 5000ms (5 seconds)
 
-container.innerHTML = cardsHTML;
+container.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.addToCartBtn button');
+    if (!btn) return;
+
+    e.preventDefault();
+
+    const res = await fetch(`${API_URL}/api/products`);
+    const products = await res.json();
+    const product = products.find(p => p.id == btn.dataset.id);
+
+    console.log('Add to cart:', product);
+});

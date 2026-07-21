@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="adminCSS.css">
+    </head>
+
+    <body>
+
+        <div>
+            ADMIN
+        </div>
+
+        <form id="productForm">
+            <input type="text" id="name" placeholder="enter product name" required>
+            <input type="text" id="description" placeholder="enter product description">
+            <input type="text" id="price" placeholder="enter price e.g. 1,980" required>
+
+            <div class="upload-box">
+                <input type="file" id="file" hidden required>
+                <label for="file" class="upload-label">
+                    Click to upload a file
+                </label>
+                <span id="file-name">No file selected</span>
+            </div>
+
+            <button type="submit">Add Product</button>
+        </form>
+
+        <div id="adminList"></div>
+
+        <script src="adminJS.js"></script>
+    </body>
+</html>
