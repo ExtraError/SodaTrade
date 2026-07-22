@@ -29,6 +29,29 @@
 
 }
 
+.signUpLogin {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+}
+
+.signUpLogin span, .signUpLogin h2 {
+    font-family: "Google Sans Flex", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0,
+    "wdth" 100,
+    "GRAD" 0,
+    "ROND" 0;
+
+    font-size: 1.2rem;
+}
+
 .sodaHeadImg {
     width: 7rem;
     height: auto;
@@ -94,10 +117,6 @@ a {
 .navigation1 a:hover::after {
     left: 0;
     width: 100%;
-}
-
-header {
-    border-bottom: 2px solid black;
 }
 
 
@@ -365,6 +384,7 @@ address {
 }
 
 main {
+    border-top: 2px solid black;
     border-bottom: 2px solid black;
 }
 

@@ -1,14 +1,35 @@
 <!DOCTYPE html>
 <html>
     <head>
+
         <link rel="stylesheet" href="productCSS.css">
+
+    </head>
+
     </head>
     <body>
-        <header></header>
+        <header>
 
 
-        <div class="productCards"></div>
-        
+            <div id="sodaTradeHeader1"></div>
+
+            <script>
+                fetch("sodaTradeHeader.html")
+                .then(res => res.text())
+                .then(data => {
+                    document.getElementById('sodaTradeHeader1').innerHTML = data;
+                })
+
+            </script>
+
+
+        </header>
+
+        <main>
+            <div class="productGrids">
+                <div class="productCards"></div>
+            </div>
+        </main>
 
 
     <footer></footer>

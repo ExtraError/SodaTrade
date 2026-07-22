@@ -31,3 +31,9 @@
     align-items: center;
     justify-content: center;
 }
+
+.productGrids {
+    display: flex;
+    flex-direction: row;
+   margin: 3rem;
+}
