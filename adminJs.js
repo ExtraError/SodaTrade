@@ -1,6 +1,9 @@
 const API_URL = 'http://localhost:3000';
 
 const form = document.getElementById('productForm');
+const nameInput = document.getElementById('name');
+const descriptionInput = document.getElementById('description');
+const priceInput = document.getElementById('price');
 const fileInput = document.getElementById('file');
 const fileNameSpan = document.getElementById('file-name');
 const adminList = document.getElementById('adminList');
@@ -28,10 +31,26 @@ form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('name', document.getElementById('name').value);
-    formData.append('description', document.getElementById('description').value);
-    formData.append('price', document.getElementById('price').value);
-    formData.append('image', fileInput.files[0]);
+    formData.append('name', nameInput.value);
+    formData.append('description', descriptionInput.value);
+    formData.append('price', priceInput.value);
+    if (fileInput.files[0]) {
+        formData.append('image', fileInput.files[0]);
+    }
+
+    const variants = [];
+    const sizes = [
+        { size: '5kg', el: document.getElementById('price5kg') },
+        { size: '10kg', el: document.getElementById('price10kg') },
+        { size: '25kg', el: document.getElementById('price25kg') },
+        { size: '50kg', el: document.getElementById('price50kg') },
+    ];
+    sizes.forEach(({ size, el }) => {
+        if (el && el.value) {
+            variants.push({ size, price: el.value });
+        }
+    });
+    formData.append('variants', JSON.stringify(variants));
 
     await fetch(`${API_URL}/api/products`, {
         method: 'POST',

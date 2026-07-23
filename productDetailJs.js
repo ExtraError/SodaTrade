@@ -19,6 +19,26 @@ async function loadProduct() {
     document.getElementById('detailImage').alt = product.name;
     document.getElementById('detailName').textContent = product.name;
     document.getElementById('detailPrice').textContent = `₱ ${product.price}`;
+
+    const variants = product.variants ? JSON.parse(product.variants) : [];
+    const variantSelect = document.getElementById('detailVariant');
+    const priceEl = document.getElementById('detailPrice');
+
+    if (variants.length > 0) {
+        variantSelect.innerHTML = variants
+            .map(v => `<option value="${v.price}">${v.size} - ₱${v.price}</option>`)
+            .join('');
+        variantSelect.style.display = 'inline-block';
+
+        priceEl.textContent = `₱ ${variants[0].price}`;
+
+        variantSelect.addEventListener('change', () => {
+            priceEl.textContent = `₱ ${variantSelect.value}`;
+        });
+    } else {
+        variantSelect.style.display = 'none';
+    }
+
     document.getElementById('detailDescription').textContent = product.description || '';
 
     document.getElementById('detailAddToCart').addEventListener('click', () => {
