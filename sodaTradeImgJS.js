@@ -1,6 +1,66 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.pictureMotion');
     if (!container) return;
+
+    // ---------- STEP 1: build the product cards ----------
+    const products = [
+        { 
+            name: "Princess Bea", 
+            image: "princessBea.jpg",
+            price: "100" 
+        },
+        { 
+            name: "Royal Swan", 
+            image: "royalSwan.jpg",
+            price: "200" 
+        },
+        { 
+            name: "Tulips", 
+            image: "tulips.jpg",
+            price: "300" 
+        },
+        { 
+            name: "Sweet Rice", 
+            image: "sweetRice.jpg",
+            price: "400" 
+        },
+        { 
+            name: "Kuya Rice", 
+            image: "kuyaRice.jpg",
+            price: "500" 
+        },
+        { 
+            name: "Dragon Lady", 
+            image: "dragonLady.jpg",
+            price: "600" 
+        },
+        { 
+            name: "King of Zion", 
+            image: "KingOfZion.jpg",
+            price: "700" 
+        },
+        { 
+            name: "Delicious Rice", 
+            image: "deliciousRice.jpg",
+            price: "800" 
+        },
+    ];
+
+    const cardsHTML = products
+        .map(
+            (product) => `
+            <div class="productCard">
+                <img src="${product.image}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p>Pesos <span>${product.price}</span></p>
+            </div>
+        `
+        )
+        .join("");
+
+    container.innerHTML = cardsHTML;
+
+    // ---------- STEP 2: turn the cards into an infinite slider ----------
    
 
     container.style.overflow = 'hidden';
