@@ -13,13 +13,15 @@
             <div id="sodaTradeHeader1"></div>
 
             <script>
-                fetch("sodaTradeHeader.html")
-                .then(res => res.text())
-                .then(data => {
-                    document.getElementById('sodaTradeHeader1').innerHTML = data;
-                })
-
-            </script>
+    fetch("sodaTradeHeader.html")
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById('sodaTradeHeader1').innerHTML = data;
+        if (window.updateHeaderAuth) {
+            window.updateHeaderAuth();
+        }
+    })
+</script>
 
 
         </header>
@@ -34,6 +36,7 @@
     <footer></footer>
 
 
-        <script src="productGridJS.js"></script>
+        <script src="authJS.js"></script>
+<script src="productGridJS.js"></script>
     </body>
 </html>

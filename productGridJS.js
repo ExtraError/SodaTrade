@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000';
+
 const container = document.querySelector('.productCards');
 
 async function renderCards() {
