@@ -12,6 +12,11 @@ async function renderCards() {
                 <h3>${product.name}</h3>
                 <p>₱ <span>${product.price}</span></p>
                 <div class="addToCartBtn">
+                    <div class="qtyStepper" data-id="${product.id}">
+                        <button type="button" class="qtyMinus">−</button>
+                        <span class="qtyValue">1</span>
+                        <button type="button" class="qtyPlus">+</button>
+                    </div>
                     <button type="button" data-id="${product.id}">Add to Cart</button>
                 </div>
             </a>
@@ -21,9 +26,26 @@ async function renderCards() {
 
 renderCards();
 
-setInterval(renderCards, 5000); // then re-run every 5000ms (5 seconds)
 
 container.addEventListener('click', async (e) => {
+    // Handle +/- stepper clicks first
+    if (e.target.classList.contains('qtyMinus') || e.target.classList.contains('qtyPlus')) {
+        e.preventDefault();
+        const stepper = e.target.closest('.qtyStepper');
+        const valueEl = stepper.querySelector('.qtyValue');
+        let current = parseInt(valueEl.textContent) || 1;
+
+        if (e.target.classList.contains('qtyPlus')) {
+            current++;
+        } else if (current > 1) {
+            current--;
+        }
+
+        valueEl.textContent = current;
+        return;
+    }
+
+    // Handle Add to Cart click
     const btn = e.target.closest('.addToCartBtn button');
     if (!btn) return;
 
@@ -36,13 +58,16 @@ container.addEventListener('click', async (e) => {
         return;
     }
 
+    const stepper = document.querySelector(`.qtyStepper[data-id="${btn.dataset.id}"]`);
+    const quantity = stepper ? parseInt(stepper.querySelector('.qtyValue').textContent) || 1 : 1;
+
     await fetch(`${API_URL}/api/cart`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             user_id: currentUser.id,
             product_id: btn.dataset.id,
-            quantity: 1
+            quantity: quantity
         })
     });
 

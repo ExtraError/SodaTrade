@@ -122,8 +122,7 @@ window.updateCartCount = async function () {
     const res = await fetch(`${API_URL}/api/cart/${currentUser.id}`);
     const items = await res.json();
 
-    const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
-    cartCountEl.textContent = totalCount;
+    cartCountEl.textContent = items.length;
 };
 
 // ---------- CART SLIDER ----------
@@ -215,18 +214,23 @@ async function loadCartSliderItems() {
     }
 
     container.innerHTML = items
-        .map(item => `
-            <div class="cartSliderItem">
-                <img src="${API_URL}${item.image}" alt="${item.name}">
-                <div>
-                    <h4>${item.name}</h4>
-                    ${item.variant ? `<p>Variant: ${item.variant}</p>` : ''}
-                    <p>Qty: ${item.quantity} — ₱${item.price}</p>
-                    <button data-id="${item.cart_id}" class="removeCartSliderBtn">Remove</button>
+    .map(item => `
+        <div class="cartSliderItem">
+            <img src="${API_URL}${item.image}" alt="${item.name}">
+            <div>
+                <h4>${item.name}</h4>
+                ${item.variant ? `<p>Variant: ${item.variant}</p>` : ''}
+                <p>₱${item.price}</p>
+                <div class="qtyStepper" data-cart-id="${item.cart_id}">
+                    <button type="button" class="cartQtyMinus">−</button>
+                    <span class="cartQtyValue">${item.quantity}</span>
+                    <button type="button" class="cartQtyPlus">+</button>
                 </div>
+                <button data-id="${item.cart_id}" class="removeCartSliderBtn">Remove</button>
             </div>
-        `)
-        .join('');
+        </div>
+    `)
+    .join('');
 }
 
 function openCartSlider() {
@@ -252,7 +256,7 @@ function closeCartSlider() {
     if (overlay) overlay.classList.remove('open');
 }
 
-document.addEventListener('click', (e) => {
+document.addEventListener('click', async (e) => {
     if (e.target.closest('#cartIconLink')) {
         e.preventDefault();
         openCartSlider();
@@ -260,11 +264,34 @@ document.addEventListener('click', (e) => {
 
     if (e.target.classList.contains('removeCartSliderBtn')) {
         const id = e.target.dataset.id;
-        fetch(`${API_URL}/api/cart/${id}`, { method: 'DELETE' })
-            .then(() => {
-                loadCartSliderItems();
-                if (window.updateCartCount) window.updateCartCount();
-            });
+        await fetch(`${API_URL}/api/cart/${id}`, { method: 'DELETE' });
+        loadCartSliderItems();
+        if (window.updateCartCount) window.updateCartCount();
+    }
+
+    if (e.target.classList.contains('cartQtyMinus') || e.target.classList.contains('cartQtyPlus')) {
+        const stepper = e.target.closest('.qtyStepper');
+        const cartId = stepper.dataset.cartId;
+        const valueEl = stepper.querySelector('.cartQtyValue');
+        let current = parseInt(valueEl.textContent) || 1;
+
+        if (e.target.classList.contains('cartQtyPlus')) {
+            current++;
+        } else if (current > 1) {
+            current--;
+        } else {
+            return; // don't go below 1
+        }
+
+        valueEl.textContent = current;
+
+        await fetch(`${API_URL}/api/cart/${cartId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ quantity: current })
+        });
+
+        if (window.updateCartCount) window.updateCartCount();
     }
 });
 

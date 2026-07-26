@@ -51,6 +51,7 @@ async function loadProduct() {
     }
 
     const selectedVariant = variants.length > 0 ? variantSelect.value : null;
+    const quantity = parseInt(document.getElementById('detailQtyValue').textContent) || 1;
 
     await fetch(`${API_URL}/api/cart`, {
         method: 'POST',
@@ -59,7 +60,7 @@ async function loadProduct() {
             user_id: currentUser.id,
             product_id: product.id,
             variant: selectedVariant,
-            quantity: 1
+            quantity: quantity
         })
     });
 
@@ -70,5 +71,19 @@ async function loadProduct() {
     alert('Added to cart!');
 });
 }
+
+document.getElementById('detailQtyMinus').addEventListener('click', () => {
+    const valueEl = document.getElementById('detailQtyValue');
+    let current = parseInt(valueEl.textContent) || 1;
+    if (current > 1) current--;
+    valueEl.textContent = current;
+});
+
+document.getElementById('detailQtyPlus').addEventListener('click', () => {
+    const valueEl = document.getElementById('detailQtyValue');
+    let current = parseInt(valueEl.textContent) || 1;
+    current++;
+    valueEl.textContent = current;
+});
 
 loadProduct();

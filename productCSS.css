@@ -37,3 +37,28 @@
     flex-direction: row;
    margin: 3rem;
 }
+
+/* FOR PRODUCT INCREMENT AND DECREMENT */
+
+.qtyStepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+}
+
+.qtyStepper button {
+    border: none;
+    background: #eee;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.qtyStepper button:hover {
+    background: #ddd;
+}

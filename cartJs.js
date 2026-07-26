@@ -22,7 +22,11 @@ async function loadCart() {
             <img src="${API_URL}${item.image}" width="80">
             <h3>${item.name}</h3>
             ${item.variant ? `<p>Variant: ${item.variant}</p>` : ''}
-            <p>Quantity: ${item.quantity}</p>
+            <div class="qtyStepper" data-cart-id="${item.cart_id}">
+                <button type="button" class="cartQtyMinus">−</button>
+                <span class="cartQtyValue">${item.quantity}</span>
+                <button type="button" class="cartQtyPlus">+</button>
+            </div>
             <p>₱ ${item.price}</p>
             <button data-id="${item.cart_id}" class="removeBtn">Remove</button>
         </div>
@@ -31,11 +35,30 @@ async function loadCart() {
 }
 
 cartItemsDiv.addEventListener('click', async (e) => {
-    if (!e.target.classList.contains('removeBtn')) return;
-    const id = e.target.dataset.id;
-    await fetch(`${API_URL}/api/cart/${id}`, { method: 'DELETE' });
-    loadCart();
-    if (window.updateCartCount) window.updateCartCount();
+    if (e.target.classList.contains('cartQtyMinus') || e.target.classList.contains('cartQtyPlus')) {
+        const stepper = e.target.closest('.qtyStepper');
+        const cartId = stepper.dataset.cartId;
+        const valueEl = stepper.querySelector('.cartQtyValue');
+        let current = parseInt(valueEl.textContent) || 1;
+
+        if (e.target.classList.contains('cartQtyPlus')) {
+            current++;
+        } else if (current > 1) {
+            current--;
+        } else {
+            return;
+        }
+
+        valueEl.textContent = current;
+
+        await fetch(`${API_URL}/api/cart/${cartId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ quantity: current })
+        });
+
+        if (window.updateCartCount) window.updateCartCount();
+    }
 });
 
 loadCart();
