@@ -126,6 +126,148 @@ window.updateCartCount = async function () {
     cartCountEl.textContent = totalCount;
 };
 
+// ---------- CART SLIDER ----------
+function buildCartSlider() {
+    if (document.getElementById('cartSlider')) return;
+
+    const style = document.createElement('style');
+    style.textContent = `
+        #cartSlider {
+            position: fixed !important;
+            top: 0;
+            right: 0;
+            width: 350px;
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            transform: translateX(100%);
+            visibility: hidden;
+            transition: transform 0.3s ease, visibility 0s linear 0.3s;
+            z-index: 9999;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        #cartSlider.open {
+            transform: translateX(0);
+            visibility: visible;
+            transition: transform 0.3s ease, visibility 0s linear 0s;
+        }
+       #cartOverlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+        }
+        #cartOverlay.open {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease, visibility 0s linear 0s;
+        }
+        .cartSliderItem {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid #ddd;
+            padding: 0.5rem 0;
+        }
+        .cartSliderItem img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+        }
+    `;
+    document.head.appendChild(style);
+
+    const overlay = document.createElement('div');
+    overlay.id = 'cartOverlay';
+    document.body.appendChild(overlay);
+
+    const slider = document.createElement('div');
+    slider.id = 'cartSlider';
+    slider.innerHTML = `
+        <button id="closeCartSlider">Close &times;</button>
+        <h2>Your Cart</h2>
+        <div id="cartSliderItems"></div>
+    `;
+    document.body.appendChild(slider);
+
+    overlay.addEventListener('click', closeCartSlider);
+    document.getElementById('closeCartSlider').addEventListener('click', closeCartSlider);
+}
+
+async function loadCartSliderItems() {
+    const container = document.getElementById('cartSliderItems');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+
+    if (!currentUser) {
+        container.innerHTML = '<p>Please log in to view your cart.</p>';
+        return;
+    }
+
+    const res = await fetch(`${API_URL}/api/cart/${currentUser.id}`);
+    const items = await res.json();
+
+    if (items.length === 0) {
+        container.innerHTML = '<p>Your cart is empty.</p>';
+        return;
+    }
+
+    container.innerHTML = items
+        .map(item => `
+            <div class="cartSliderItem">
+                <img src="${API_URL}${item.image}" alt="${item.name}">
+                <div>
+                    <h4>${item.name}</h4>
+                    ${item.variant ? `<p>Variant: ${item.variant}</p>` : ''}
+                    <p>Qty: ${item.quantity} — ₱${item.price}</p>
+                    <button data-id="${item.cart_id}" class="removeCartSliderBtn">Remove</button>
+                </div>
+            </div>
+        `)
+        .join('');
+}
+
+function openCartSlider() {
+    buildCartSlider();
+
+    const slider = document.getElementById('cartSlider');
+    const overlay = document.getElementById('cartOverlay');
+
+    // Force the browser to register the starting (closed) position first
+    slider.getBoundingClientRect();
+
+    requestAnimationFrame(() => {
+        slider.classList.add('open');
+        overlay.classList.add('open');
+    });
+
+    loadCartSliderItems();
+}
+function closeCartSlider() {
+    const slider = document.getElementById('cartSlider');
+    const overlay = document.getElementById('cartOverlay');
+    if (slider) slider.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+}
+
+document.addEventListener('click', (e) => {
+    if (e.target.closest('#cartIconLink')) {
+        e.preventDefault();
+        openCartSlider();
+    }
+
+    if (e.target.classList.contains('removeCartSliderBtn')) {
+        const id = e.target.dataset.id;
+        fetch(`${API_URL}/api/cart/${id}`, { method: 'DELETE' })
+            .then(() => {
+                loadCartSliderItems();
+                if (window.updateCartCount) window.updateCartCount();
+            });
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     window.updateHeaderAuth();
     window.updateCartCount();

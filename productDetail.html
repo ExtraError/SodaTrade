@@ -5,20 +5,17 @@
     </head>
     <body>
         <header>
-
-            <div id="sodaTradeHeader1"></div>
-
-            <script>
-    fetch("sodaTradeHeader.html")
-    .then(res => res.text())
-    .then(data => {
-        document.getElementById('sodaTradeHeader1').innerHTML = data;
-        if (window.updateHeaderAuth) window.updateHeaderAuth();
-        if (window.updateCartCount) window.updateCartCount();
-    })
-</script>
-
-        </header>
+    <div id="sodaTradeHeader1"></div>
+    <script>
+        fetch("sodaTradeHeader.html")
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById('sodaTradeHeader1').innerHTML = data;
+            if (window.updateHeaderAuth) window.updateHeaderAuth();
+            if (window.updateCartCount) window.updateCartCount();
+        })
+    </script>
+</header>
 
         <div class="productDetail">
             <img id="detailImage" src="" alt="">
