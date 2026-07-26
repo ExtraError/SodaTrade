@@ -29,9 +29,24 @@ container.addEventListener('click', async (e) => {
 
     e.preventDefault();
 
-    const res = await fetch(`${API_URL}/api/products`);
-    const products = await res.json();
-    const product = products.find(p => p.id == btn.dataset.id);
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
 
-    console.log('Add to cart:', product);
+    if (!currentUser) {
+        alert('Please log in first to add items to your cart.');
+        return;
+    }
+
+    await fetch(`${API_URL}/api/cart`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            user_id: currentUser.id,
+            product_id: btn.dataset.id,
+            quantity: 1
+        })
+    });
+
+    if (window.updateCartCount) {
+        window.updateCartCount();
+    }
 });

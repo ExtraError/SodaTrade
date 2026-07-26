@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000';
+
 
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
@@ -25,25 +25,50 @@ async function loadProduct() {
     const priceEl = document.getElementById('detailPrice');
 
     if (variants.length > 0) {
-        variantSelect.innerHTML = variants
-            .map(v => `<option value="${v.price}">${v.size} - ₱${v.price}</option>`)
-            .join('');
-        variantSelect.style.display = 'inline-block';
+    variantSelect.innerHTML = variants
+        .map(v => `<option value="${v.size}">${v.size} - ₱${v.price}</option>`)
+        .join('');
+    variantSelect.style.display = 'inline-block';
 
-        priceEl.textContent = `₱ ${variants[0].price}`;
+    priceEl.textContent = `₱ ${variants[0].price}`;
 
-        variantSelect.addEventListener('change', () => {
-            priceEl.textContent = `₱ ${variantSelect.value}`;
-        });
-    } else {
-        variantSelect.style.display = 'none';
-    }
+    variantSelect.addEventListener('change', () => {
+        const selected = variants.find(v => v.size === variantSelect.value);
+        priceEl.textContent = `₱ ${selected.price}`;
+    });
+} else {
+    variantSelect.style.display = 'none';
+}
 
     document.getElementById('detailDescription').textContent = product.description || '';
 
-    document.getElementById('detailAddToCart').addEventListener('click', () => {
-        console.log('Add to cart:', product);
+    document.getElementById('detailAddToCart').addEventListener('click', async () => {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+
+    if (!currentUser) {
+        alert('Please log in first to add items to your cart.');
+        return;
+    }
+
+    const selectedVariant = variants.length > 0 ? variantSelect.value : null;
+
+    await fetch(`${API_URL}/api/cart`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            user_id: currentUser.id,
+            product_id: product.id,
+            variant: selectedVariant,
+            quantity: 1
+        })
     });
+
+    if (window.updateCartCount) {
+        window.updateCartCount();
+    }
+
+    alert('Added to cart!');
+});
 }
 
 loadProduct();

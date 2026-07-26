@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="productCSS.css">
+    </head>
+    <body>
+        <header>
+            <div id="sodaTradeHeader1"></div>
+            <script>
+                fetch("sodaTradeHeader.html")
+                .then(res => res.text())
+                .then(data => {
+                    document.getElementById('sodaTradeHeader1').innerHTML = data;
+                    if (window.updateHeaderAuth) window.updateHeaderAuth();
+                    if (window.updateCartCount) window.updateCartCount();
+                })
+            </script>
+        </header>
+
+        <main>
+            <h1>Your Cart</h1>
+            <div id="cartItems"></div>
+        </main>
+
+        <footer></footer>
+
+        <script src="authJS.js"></script>
+        <script src="cartJS.js"></script>
+    </body>
+</html>

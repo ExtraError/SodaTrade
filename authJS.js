@@ -107,6 +107,26 @@ if (logoutBtn) {
 }
 
 // ---------- Run header check automatically if signUpLogin exists directly on this page (not fetched) ----------
+
+window.updateCartCount = async function () {
+    const cartCountEl = document.getElementById('cartCount');
+    if (!cartCountEl) return;
+
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+
+    if (!currentUser) {
+        cartCountEl.textContent = '0';
+        return;
+    }
+
+    const res = await fetch(`${API_URL}/api/cart/${currentUser.id}`);
+    const items = await res.json();
+
+    const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
+    cartCountEl.textContent = totalCount;
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     window.updateHeaderAuth();
+    window.updateCartCount();
 });

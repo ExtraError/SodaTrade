@@ -17,9 +17,8 @@
     .then(res => res.text())
     .then(data => {
         document.getElementById('sodaTradeHeader1').innerHTML = data;
-        if (window.updateHeaderAuth) {
-            window.updateHeaderAuth();
-        }
+        if (window.updateHeaderAuth) window.updateHeaderAuth();
+        if (window.updateCartCount) window.updateCartCount();
     })
 </script>
 
