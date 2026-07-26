@@ -58,6 +58,15 @@ container.addEventListener('click', async (e) => {
         return;
     }
 
+    const cartRes = await fetch(`${API_URL}/api/cart/${currentUser.id}`);
+    const cartItems = await cartRes.json();
+    const alreadyInCart = cartItems.some(item => item.id == btn.dataset.id);
+
+    if (alreadyInCart) {
+        alert('This product is already in your cart. Open your cart to change the quantity.');
+        return;
+    }
+
     const stepper = document.querySelector(`.qtyStepper[data-id="${btn.dataset.id}"]`);
     const quantity = stepper ? parseInt(stepper.querySelector('.qtyValue').textContent) || 1 : 1;
 

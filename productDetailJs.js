@@ -51,6 +51,18 @@ async function loadProduct() {
     }
 
     const selectedVariant = variants.length > 0 ? variantSelect.value : null;
+
+    const cartRes = await fetch(`${API_URL}/api/cart/${currentUser.id}`);
+    const cartItems = await cartRes.json();
+    const alreadyInCart = cartItems.some(item =>
+        item.id == product.id && (item.variant || null) === (selectedVariant || null)
+    );
+
+    if (alreadyInCart) {
+        alert('This product (and variant) is already in your cart. Open your cart to change the quantity.');
+        return;
+    }
+
     const quantity = parseInt(document.getElementById('detailQtyValue').textContent) || 1;
 
     await fetch(`${API_URL}/api/cart`, {
