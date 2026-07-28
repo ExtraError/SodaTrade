@@ -1,18 +1,18 @@
-const cartItemsDiv = document.getElementById('cartItems');
+const orderItemsDiv = document.getElementById('orderItems');
 
-async function loadCart() {
+async function loadOrders() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
 
     if (!currentUser) {
-        cartItemsDiv.innerHTML = '<p>Please log in to view your cart.</p>';
+        orderItemsDiv.innerHTML = '<p>Please log in.</p>';
         return;
     }
 
-    const res = await fetch(`${API_URL}/api/cart/${currentUser.id}`);
+    const res = await fetch(`${API_URL}/api/orders/${currentUser.id}`);
     const items = await res.json();
 
     if (items.length === 0) {
-        cartItemsDiv.innerHTML = '<p>Your cart is empty.</p>';
+        orderItemsDiv.innerHTML = '<p>No items checked out yet.</p>';
         return;
     }
 
@@ -34,19 +34,26 @@ async function loadCart() {
                         <button type="button" class="cartQtyPlus">+</button>
                     </div>
                     <p>₱ ${item.price} each — Subtotal: ₱${lineTotal.toFixed(2)}</p>
-                    <button data-id="${item.cart_id}" class="removeBtn">Remove</button>
+                    <button data-id="${item.cart_id}" class="removeOrderBtn">Remove</button>
                 </div>
             `;
         })
         .join('');
 
-    cartItemsDiv.innerHTML = `
+    orderItemsDiv.innerHTML = `
         ${itemsHTML}
         <h2>Total: ₱${grandTotal.toFixed(2)}</h2>
     `;
 }
 
-cartItemsDiv.addEventListener('click', async (e) => {
+orderItemsDiv.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('removeOrderBtn')) {
+        const id = e.target.dataset.id;
+        await fetch(`${API_URL}/api/cart/${id}`, { method: 'DELETE' });
+        loadOrders();
+        return;
+    }
+
     if (e.target.classList.contains('cartQtyMinus') || e.target.classList.contains('cartQtyPlus')) {
         const stepper = e.target.closest('.qtyStepper');
         const cartId = stepper.dataset.cartId;
@@ -69,27 +76,8 @@ cartItemsDiv.addEventListener('click', async (e) => {
             body: JSON.stringify({ quantity: current })
         });
 
-        if (window.updateCartCount) window.updateCartCount();
+        loadOrders();
     }
 });
 
-document.getElementById('checkoutBtn').addEventListener('click', async () => {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-
-    if (!currentUser) {
-        alert('Please log in first.');
-        return;
-    }
-
-    await fetch(`${API_URL}/api/checkout`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: currentUser.id })
-    });
-
-    if (window.updateCartCount) window.updateCartCount();
-
-    window.location.href = 'userDashboard.html';
-});
-
-loadCart();
+loadOrders();

@@ -28,9 +28,10 @@ async function loadProduct() {
     variantSelect.innerHTML = variants
         .map(v => `<option value="${v.size}">${v.size} - ₱${v.price}</option>`)
         .join('');
-    variantSelect.style.display = 'inline-block';
 
-    priceEl.textContent = `₱ ${variants[0].price}`;
+    variantSelect.style.display = 'inline-block';
+    
+    priceEl.textContent = `₱ ${product.price}`;
 
     variantSelect.addEventListener('change', () => {
         const selected = variants.find(v => v.size === variantSelect.value);

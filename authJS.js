@@ -213,24 +213,39 @@ async function loadCartSliderItems() {
         return;
     }
 
-    container.innerHTML = items
-    .map(item => `
-        <div class="cartSliderItem">
-            <img src="${API_URL}${item.image}" alt="${item.name}">
-            <div>
-                <h4>${item.name}</h4>
-                ${item.variant ? `<p>Variant: ${item.variant}</p>` : ''}
-                <p>₱${item.price}</p>
-                <div class="qtyStepper" data-cart-id="${item.cart_id}">
-                    <button type="button" class="cartQtyMinus">−</button>
-                    <span class="cartQtyValue">${item.quantity}</span>
-                    <button type="button" class="cartQtyPlus">+</button>
+    let grandTotal = 0;
+
+    const itemsHTML = items
+        .map(item => {
+            const lineTotal = parseFloat(item.price) * item.quantity;
+            grandTotal += lineTotal;
+
+            return `
+                <div class="cartSliderItem">
+                    <img src="${API_URL}${item.image}" alt="${item.name}">
+                    <div>
+                        <h4>${item.name}</h4>
+                        ${item.variant ? `<p>Variant: ${item.variant}</p>` : ''}
+                        <p>₱${item.price} each</p>
+                        <div class="qtyStepper" data-cart-id="${item.cart_id}">
+                            <button type="button" class="cartQtyMinus">−</button>
+                            <span class="cartQtyValue">${item.quantity}</span>
+                            <button type="button" class="cartQtyPlus">+</button>
+                        </div>
+                        <p class="lineTotal">Subtotal: ₱${lineTotal.toFixed(2)}</p>
+                        <button data-id="${item.cart_id}" class="removeCartSliderBtn">Remove</button>
+                    </div>
                 </div>
-                <button data-id="${item.cart_id}" class="removeCartSliderBtn">Remove</button>
-            </div>
+            `;
+        })
+        .join('');
+
+    container.innerHTML = `
+        ${itemsHTML}
+        <div id="cartGrandTotal">
+            <h3>Total: ₱${grandTotal.toFixed(2)}</h3>
         </div>
-    `)
-    .join('');
+    `;
 }
 
 function openCartSlider() {
