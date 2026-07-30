@@ -84,3 +84,9 @@ container.addEventListener('click', async (e) => {
         window.updateCartCount();
     }
 });
+
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        renderCards();
+    }
+});

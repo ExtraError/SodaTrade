@@ -28,13 +28,13 @@ async function loadOrders() {
                     <img src="${API_URL}${item.image}" width="80">
                     <h3>${item.name}</h3>
                     ${item.variant ? `<p>Variant: ${item.variant}</p>` : ''}
-                    <div class="qtyStepper" data-cart-id="${item.cart_id}">
+                    <div class="qtyStepper" data-order-id="${item.order_id}">
                         <button type="button" class="cartQtyMinus">−</button>
                         <span class="cartQtyValue">${item.quantity}</span>
                         <button type="button" class="cartQtyPlus">+</button>
                     </div>
                     <p>₱ ${item.price} each — Subtotal: ₱${lineTotal.toFixed(2)}</p>
-                    <button data-id="${item.cart_id}" class="removeOrderBtn">Remove</button>
+                    <button data-id="${item.order_id}" class="removeOrderBtn">Remove</button>
                 </div>
             `;
         })
@@ -49,14 +49,14 @@ async function loadOrders() {
 orderItemsDiv.addEventListener('click', async (e) => {
     if (e.target.classList.contains('removeOrderBtn')) {
         const id = e.target.dataset.id;
-        await fetch(`${API_URL}/api/cart/${id}`, { method: 'DELETE' });
+        await fetch(`${API_URL}/api/orders/${id}`, { method: 'DELETE' });
         loadOrders();
         return;
     }
 
     if (e.target.classList.contains('cartQtyMinus') || e.target.classList.contains('cartQtyPlus')) {
         const stepper = e.target.closest('.qtyStepper');
-        const cartId = stepper.dataset.cartId;
+        const orderId = stepper.dataset.orderId;
         const valueEl = stepper.querySelector('.cartQtyValue');
         let current = parseInt(valueEl.textContent) || 1;
 
@@ -70,14 +70,18 @@ orderItemsDiv.addEventListener('click', async (e) => {
 
         valueEl.textContent = current;
 
-        await fetch(`${API_URL}/api/cart/${cartId}`, {
+        await fetch(`${API_URL}/api/orders/${orderId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ quantity: current })
         });
-
-        loadOrders();
     }
 });
 
 loadOrders();
+
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        loadOrders();
+    }
+});

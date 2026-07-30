@@ -47,6 +47,14 @@ async function loadCart() {
 }
 
 cartItemsDiv.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('removeBtn')) {
+        const id = e.target.dataset.id;
+        await fetch(`${API_URL}/api/cart/${id}`, { method: 'DELETE' });
+        if (window.updateCartCount) window.updateCartCount();
+        loadCart();
+        return;
+    }
+
     if (e.target.classList.contains('cartQtyMinus') || e.target.classList.contains('cartQtyPlus')) {
         const stepper = e.target.closest('.qtyStepper');
         const cartId = stepper.dataset.cartId;
@@ -92,4 +100,12 @@ document.getElementById('checkoutBtn').addEventListener('click', async () => {
     window.location.href = 'userDashboard.html';
 });
 
+
+
 loadCart();
+
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        loadCart();
+    }
+});

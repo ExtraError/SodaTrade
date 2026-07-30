@@ -189,6 +189,7 @@ function buildCartSlider() {
         <button id="closeCartSlider">Close &times;</button>
         <h2>Your Cart</h2>
         <div id="cartSliderItems"></div>
+        <a href="cart.html" id="viewCartLink">View My Cart</a>
     `;
     document.body.appendChild(slider);
 
@@ -313,4 +314,12 @@ document.addEventListener('click', async (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     window.updateHeaderAuth();
     window.updateCartCount();
+});
+
+// ---------- Refresh header + cart count whenever a page is restored from back/forward cache ----------
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        if (window.updateHeaderAuth) window.updateHeaderAuth();
+        if (window.updateCartCount) window.updateCartCount();
+    }
 });
