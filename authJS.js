@@ -42,6 +42,14 @@ if (signUpForm) {
 const loginForm = document.getElementById('loginForm');
 const loginMessage = document.getElementById('loginMessage');
 
+// If already logged in, skip the login/signup form entirely
+if (loginForm || signUpForm) {
+    const existingUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (existingUser) {
+        window.location.replace('userDashboard.html');
+    }
+}
+
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -69,7 +77,7 @@ if (loginForm) {
         loginMessage.style.color = 'green';
 
         setTimeout(() => {
-            window.location.href = 'userDashboard.html';
+            window.location.replace('userDashboard.html');
         }, 1000);
     });
 }
@@ -308,6 +316,7 @@ document.addEventListener('click', async (e) => {
         });
 
         if (window.updateCartCount) window.updateCartCount();
+        loadCartSliderItems();
     }
 });
 
@@ -321,5 +330,19 @@ window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
         if (window.updateHeaderAuth) window.updateHeaderAuth();
         if (window.updateCartCount) window.updateCartCount();
+    }
+});
+
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted && loginForm) {
+        loginForm.reset();
+        if (loginMessage) loginMessage.textContent = '';
+    }
+});
+
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted && signUpForm) {
+        signUpForm.reset();
+        if (signUpMessage) signUpMessage.textContent = '';
     }
 });

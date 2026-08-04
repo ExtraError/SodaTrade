@@ -60,7 +60,7 @@ container.addEventListener('click', async (e) => {
 
     const cartRes = await fetch(`${API_URL}/api/cart/${currentUser.id}`);
     const cartItems = await cartRes.json();
-    const alreadyInCart = cartItems.some(item => item.id == btn.dataset.id);
+    const alreadyInCart = cartItems.some(item => item.product_id == btn.dataset.id);
 
     if (alreadyInCart) {
         alert('This product is already in your cart. Open your cart to change the quantity.');

@@ -78,6 +78,7 @@ cartItemsDiv.addEventListener('click', async (e) => {
         });
 
         if (window.updateCartCount) window.updateCartCount();
+        loadCart();
     }
 });
 

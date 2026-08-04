@@ -75,9 +75,10 @@ orderItemsDiv.addEventListener('click', async (e) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ quantity: current })
         });
+
+        loadOrders();
     }
 });
-
 loadOrders();
 
 window.addEventListener('pageshow', (event) => {
